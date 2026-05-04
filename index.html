@@ -193,6 +193,7 @@ body{font-family:'Jost',sans-serif;background:var(--charcoal);color:var(--cream)
 .vbtn.active{background:var(--gold);border-color:var(--gold)}
 .vbtn svg{fill:var(--stone)}
 .vbtn.active svg{fill:var(--charcoal)}
+.filter-sep{width:1px;background:var(--border);align-self:stretch;flex-shrink:0;margin:0 2px}
 
 .results-bar{padding:14px 48px 10px;display:flex;align-items:center}
 .rcount{font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--stone)}
@@ -538,6 +539,16 @@ body{font-family:'Jost',sans-serif;background:var(--charcoal);color:var(--cream)
       <button class="fbtn" data-brand="Cartier">Cartier</button>
       <button class="fbtn" data-brand="Otros">Otros</button>
     </div>
+    <div class="filters-row">
+      <button class="fbtn f-cond active" data-cond="all">Nuevo &amp; Usado</button>
+      <button class="fbtn f-cond" data-cond="Unworn">Nuevo</button>
+      <button class="fbtn f-cond" data-cond="Pre Owned">Usado</button>
+      <span class="filter-sep"></span>
+      <button class="fbtn f-set active" data-set="all">Todos los sets</button>
+      <button class="fbtn f-set" data-set="full">Full Set</button>
+      <button class="fbtn f-set" data-set="box">Solo caja</button>
+      <button class="fbtn f-set" data-set="watch">Solo reloj</button>
+    </div>
     <select class="price-sel" id="priceFilter">
       <option value="all">Todos los precios</option>
       <option value="0-25000">Hasta $25,000</option>
@@ -844,7 +855,7 @@ function scrollToCat(e) { if(e) e.preventDefault(); document.getElementById('cat
 // ── CATALOG ───────────────────────────────────────────────────────────────────
 const fmt = n => '$' + n.toLocaleString('en-US');
 const grid = document.getElementById('catGrid');
-let cBrand='all', cPrice='all', cSearch='';
+let cBrand='all', cPrice='all', cSearch='', cCond='all', cSet='all';
 
 function filterW() {
   return watches.filter(w => {
@@ -853,7 +864,12 @@ function filterW() {
     const sOk = !q || w.model.toLowerCase().includes(q) || w.brand.toLowerCase().includes(q) || w.ref.includes(q);
     let pOk = true;
     if(cPrice!=='all') { const [lo,hi]=cPrice.split('-').map(Number); pOk=w.price>=lo&&w.price<=hi; }
-    return bOk && sOk && pOk;
+    const cOk = cCond==='all' || w.condition===cCond;
+    let setOk = true;
+    if(cSet==='full')  setOk = w.box && w.papers;
+    if(cSet==='box')   setOk = w.box && !w.papers;
+    if(cSet==='watch') setOk = !w.box && !w.papers;
+    return bOk && sOk && pOk && cOk && setOk;
   });
 }
 
@@ -1014,11 +1030,27 @@ overlay.addEventListener('click', e => { if(e.target===overlay) closeModal(); })
 document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
 
 // ── FILTERS ───────────────────────────────────────────────────────────────────
-document.querySelectorAll('.fbtn').forEach(btn => {
+document.querySelectorAll('.fbtn[data-brand]').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.fbtn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.fbtn[data-brand]').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     cBrand = btn.dataset.brand;
+    renderGrid();
+  });
+});
+document.querySelectorAll('.f-cond').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.f-cond').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    cCond = btn.dataset.cond;
+    renderGrid();
+  });
+});
+document.querySelectorAll('.f-set').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.f-set').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    cSet = btn.dataset.set;
     renderGrid();
   });
 });
