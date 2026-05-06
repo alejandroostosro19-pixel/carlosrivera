@@ -1411,6 +1411,31 @@ const watches = [
   {brand:'Jaeger-LeCoultre',model:'Rendez-Vous Night & Day Q3448110',ref:'17629',price:13440,size:'',condition:'Unworn',box:true,papers:true,year:'',k:'W_17629'},
   {brand:'Jaeger-LeCoultre',model:'Rendez-Vous Night & Day Q3448190',ref:'17630',price:9765,size:'',condition:'Unworn',box:true,papers:true,year:'',k:'W_17630'},
 ];
+
+// ── BG SLIDESHOW ──────────────────────────────────────────────────────────────
+const bgTrack = document.getElementById('bgTrack');
+const bgDots  = document.getElementById('bgDots');
+let bgCur = 0;
+BG.forEach((src,i) => {
+  const s = document.createElement('div');
+  s.className = 'bg-slide' + (i===0?' active':'');
+  s.style.backgroundImage = 'url(' + src + ')';
+  bgTrack.appendChild(s);
+  const d = document.createElement('div');
+  d.className = 'bg-dot' + (i===0?' active':'');
+  d.onclick = () => bgTo(i);
+  bgDots.appendChild(d);
+});
+function bgTo(n) {
+  const slides = bgTrack.querySelectorAll('.bg-slide');
+  const dots   = bgDots.querySelectorAll('.bg-dot');
+  slides[bgCur].classList.remove('active'); dots[bgCur].classList.remove('active');
+  bgCur = (n + BG.length) % BG.length;
+  slides[bgCur].classList.add('active'); dots[bgCur].classList.add('active');
+}
+setTimeout(() => setInterval(() => bgTo(bgCur + 1), 5000), 4800);
+
+
 function scrollToCat(e) { if(e) e.preventDefault(); document.getElementById('catalogo').scrollIntoView({behavior:'smooth'}); }
 
 // ── CATALOG ───────────────────────────────────────────────────────────────────
@@ -1420,7 +1445,8 @@ let cBrand='all', cPrice='all', cSearch='', cCond='all', cSet='all';
 
 function filterW() {
   return watches.filter(w => {
-    const bOk = cBrand==='all' || w.brand===cBrand;
+    const mainBrands=['Rolex','Audemars Piguet','Patek Philippe','Richard Mille','Hublot','Cartier'];
+    const bOk = cBrand==='all' || (cBrand==='Otros' ? !mainBrands.includes(w.brand) : w.brand===cBrand);
     const q = cSearch.toLowerCase();
     const sOk = !q || w.model.toLowerCase().includes(q) || w.brand.toLowerCase().includes(q) || w.ref.includes(q);
     let pOk = true;
