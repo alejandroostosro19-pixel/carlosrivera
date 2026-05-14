@@ -826,6 +826,11 @@ body{font-family:'Jost',sans-serif;background:var(--charcoal);color:var(--cream)
       <option value="75000-200000">$75k – $200k</option>
       <option value="200000-9999999">$200k+</option>
     </select>
+    <select class="price-sel" id="sortSelect">
+      <option value="default">Ordenar por</option>
+      <option value="asc">Precio: Menor a Mayor</option>
+      <option value="desc">Precio: Mayor a Menor</option>
+    </select>
     <div class="view-toggle">
       <button class="vbtn active" id="gridBtn"><svg width="11" height="11" viewBox="0 0 16 16"><rect x="1" y="1" width="5.5" height="5.5"/><rect x="9.5" y="1" width="5.5" height="5.5"/><rect x="1" y="9.5" width="5.5" height="5.5"/><rect x="9.5" y="9.5" width="5.5" height="5.5"/></svg></button>
       <button class="vbtn" id="listBtn"><svg width="11" height="11" viewBox="0 0 16 16"><rect x="1" y="2" width="14" height="2.5"/><rect x="1" y="6.8" width="14" height="2.5"/><rect x="1" y="11.5" width="14" height="2.5"/></svg></button>
@@ -1803,7 +1808,7 @@ function scrollToCat(e) { if(e) e.preventDefault(); document.getElementById('cat
 // ── CATALOG ───────────────────────────────────────────────────────────────────
 const fmt = n => '$' + n.toLocaleString('en-US');
 const grid = document.getElementById('catGrid');
-let cBrand='all', cPrice='all', cSearch='', cCond='all', cSet='all';
+let cBrand='all', cPrice='all', cSearch='', cCond='all', cSet='all', cSort='default';
 
 function filterW() {
   return watches.filter(w => {
@@ -1829,6 +1834,8 @@ function svgPh(brand) {
 
 function renderGrid() {
   const f = filterW();
+  if(cSort==='asc')  f.sort((a,b)=>a.price-b.price);
+  else if(cSort==='desc') f.sort((a,b)=>b.price-a.price);
   document.getElementById('rCount').textContent = f.length;
   if(!f.length) { grid.innerHTML='<div class="empty-state"><p>Sin resultados</p></div>'; return; }
   // Build HTML without embedding base64 in template
@@ -2005,6 +2012,7 @@ document.querySelectorAll('.f-set').forEach(btn => {
 });
 document.getElementById('searchInput').addEventListener('input', e => { cSearch=e.target.value.trim(); renderGrid(); });
 document.getElementById('priceFilter').addEventListener('change', e => { cPrice=e.target.value; renderGrid(); });
+document.getElementById('sortSelect').addEventListener('change', e => { cSort=e.target.value; renderGrid(); });
 document.getElementById('gridBtn').addEventListener('click', () => {
   grid.classList.remove('list-view');
   document.getElementById('gridBtn').classList.add('active');
