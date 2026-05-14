@@ -28,38 +28,83 @@ def parse_price(text):
     except:
         return 0.0
 
+def extract_price(block):
+    """Intenta múltiples patrones para extraer precio."""
+    # 1) Precio con descuento: <ins>
+    ins_match = re.search(
+        r'<ins[^>]*>.*?<bdi[^>]*>.*?>([\d,\.]+)</bdi>.*?</ins>',
+        block, re.DOTALL
+    )
+    del_match = re.search(
+        r'<del[^>]*>.*?<bdi[^>]*>.*?>([\d,\.]+)</bdi>.*?</del>',
+        block, re.DOTALL
+    )
+    if ins_match:
+        return (
+            parse_price(ins_match.group(1)),
+            parse_price(del_match.group(1)) if del_match else None,
+            True
+        )
+
+    # 2) Precio normal en woocommerce-Price-amount
+    m = re.search(
+        r'woocommerce-Price-amount[^>]*>.*?<bdi[^>]*>[^<]*<[^>]+>([\d,\.]+)</bdi>',
+        block, re.DOTALL
+    )
+    if m:
+        return parse_price(m.group(1)), None, False
+
+    # 3) Cualquier <bdi> con número después de símbolo de moneda
+    m = re.search(r'<bdi>\s*(?:<[^>]+>)?(?:\$|MXN|&#36;|&\#36;)?\s*?([\d,\.]+)\s*</bdi>', block)
+    if m:
+        return parse_price(m.group(1)), None, False
+
+    # 4) Buscar cualquier número que parezca precio (4+ dígitos con coma/punto)
+    prices = re.findall(r'(?:\$|MXN)\s*([\d]{1,3}(?:,[\d]{3})*(?:\.[\d]{2})?)', block)
+    if prices:
+        return parse_price(prices[0]), None, False
+
+    return 0.0, None, False
+
+
 def parse_products(html):
     products = []
+    skipped_no_price = 0
+
     # Divide en bloques por producto
-    blocks = re.split(r'(?=<div class="porto-tb-item product)', html)
+    blocks = re.split(r'(?=<div[^>]+class="[^"]*porto-tb-item[^"]*product)', html)
 
     for block in blocks[1:]:
         p = {}
 
         # ID del post
-        m = re.search(r'post-(\d+) ', block)
+        m = re.search(r'post-(\d+)\b', block)
         if m:
             p['id'] = m.group(1)
             p['k'] = 'MJ_' + m.group(1)
 
-        # Nombre del producto (data-title es lo más limpio)
+        # Nombre del producto
         m = re.search(r'data-title="([^"]+)"', block)
+        if not m:
+            # Fallback: título en el enlace de producto
+            m = re.search(r'class="woocommerce-loop-product__title">([^<]+)<', block)
         if m:
             p['model'] = m.group(1).strip()
 
         # URL del producto
-        m = re.search(r'href="(https://mastersjoyeros\.com/tienda/[^"]+)" class="img-thumbnail"', block)
+        m = re.search(r'href="(https://mastersjoyeros\.com/tienda/[^"]+)"', block)
         if m:
             p['url'] = m.group(1)
 
-        # Imagen principal (primera img-responsive)
-        m = re.search(r'src="(https://mastersjoyeros\.com/wp-content/uploads/[^"]+)" class="img-responsive"', block)
+        # Imagen principal
+        m = re.search(r'src="(https://mastersjoyeros\.com/wp-content/uploads/[^"]+?)"', block)
         if m:
-            # Preferir versión 700px si existe en srcset
             srcset = re.search(r'srcset="([^"]+)"', block)
             if srcset:
-                # Buscar la variante 700w
-                s700 = re.search(r'(https://mastersjoyeros\.com/wp-content/uploads/\S+-700x\d+\.\w+) 700w', srcset.group(1))
+                s700 = re.search(
+                    r'(https://mastersjoyeros\.com/wp-content/uploads/\S+-700x\d+\.\w+) 700w',
+                    srcset.group(1)
+                )
                 p['img'] = s700.group(1) if s700 else m.group(1)
             else:
                 p['img'] = m.group(1)
@@ -67,41 +112,26 @@ def parse_products(html):
         # Categorías / marca
         cats = re.findall(r'rel="tag">([^<]+)</a>', block)
         p['categories'] = cats
-        # La marca es la última cat sin flechas, sin "Super Sale"
         brands = [c.strip() for c in cats if not c.startswith('→') and c.strip() not in ('Super Sale',)]
         p['brand'] = brands[-1] if brands else 'Otros'
 
-        # Precio: si hay descuento tomamos el precio de <ins>, si no el único precio
-        ins_match = re.search(
-            r'<ins[^>]*>.*?<bdi>.*?>([\d,\.]+)</bdi>.*?</ins>',
-            block, re.DOTALL
-        )
-        del_match = re.search(
-            r'<del[^>]*>.*?<bdi>.*?>([\d,\.]+)</bdi>.*?</del>',
-            block, re.DOTALL
-        )
-        plain_match = re.search(
-            r'<span class="price"><span class="woocommerce-Price-amount[^"]*"><bdi>[^>]+>([\d,\.]+)</bdi>',
-            block
-        )
+        # Precio
+        price, price_orig, on_sale = extract_price(block)
+        p['price'] = price
+        p['price_original'] = price_orig
+        p['on_sale'] = on_sale
 
-        if ins_match:
-            p['price'] = parse_price(ins_match.group(1))
-            p['price_original'] = parse_price(del_match.group(1)) if del_match else None
-            p['on_sale'] = True
-        elif plain_match:
-            p['price'] = parse_price(plain_match.group(1))
-            p['on_sale'] = False
-
-        # Badge de descuento (ej: -40%)
+        # Badge de descuento
         m = re.search(r'<div class="onsale">([^<]+)</div>', block)
         if m:
             p['sale_badge'] = m.group(1).strip()
 
-        # Solo añadir si tiene datos mínimos
-        if p.get('model') and p.get('price', 0) > 0:
-            # Campos compatibles con el catálogo existente
-            p['ref']       = p['id']
+        # Solo añadir si tiene nombre
+        if p.get('model'):
+            if p['price'] == 0:
+                skipped_no_price += 1
+
+            p['ref']       = p.get('id', '')
             p['condition'] = 'Unworn'
             p['box']       = True
             p['papers']    = True
@@ -111,7 +141,7 @@ def parse_products(html):
             p['source']    = 'Masters Joyeros'
             products.append(p)
 
-    return products
+    return products, skipped_no_price
 
 
 all_products = []
@@ -121,15 +151,18 @@ for page in range(1, total_pages + 1):
     url = f"https://mastersjoyeros.com/product-brand/relojes/page/{page}/?count=36"
     print(f"[{page}/{total_pages}] {url}")
     try:
-        html     = fetch(url)
-        products = parse_products(html)
+        html = fetch(url)
+        products, skipped = parse_products(html)
         all_products.extend(products)
-        print(f"  → {len(products)} productos encontrados")
+        print(f"  → {len(products)} productos ({skipped} sin precio)")
     except Exception as e:
         print(f"  ERROR: {e}")
-    time.sleep(1.5)   # pausa educada entre requests
+    time.sleep(1.5)
 
 print(f"\nTotal: {len(all_products)} productos")
+with_price = [p for p in all_products if p['price'] > 0]
+print(f"Con precio: {len(with_price)}")
+print(f"Sin precio: {len(all_products) - len(with_price)}")
 
 with open('masters_catalog.json', 'w', encoding='utf-8') as f:
     json.dump(all_products, f, ensure_ascii=False, indent=2)
