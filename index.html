@@ -874,8 +874,8 @@ body{font-family:'Jost',sans-serif;background:var(--charcoal);color:var(--cream)
       <button class="fbtn" data-brand="Hublot">Hublot</button>
       <button class="fbtn" data-brand="Cartier">Cartier</button>
       <button class="fbtn" data-brand="BALL">Ball</button>
-      <button class="fbtn" data-brand="TAG Heuer">Tag Heuer</button>
-      <button class="fbtn" data-brand="Breitling">Breitling</button>
+      <button class="fbtn" data-brand="TAG HEUER">Tag Heuer</button>
+      <button class="fbtn" data-brand="BREITLING">Breitling</button>
       <button class="fbtn" data-brand="Otros">Otros</button>
     </div>
     <div class="filters-row">
@@ -2222,7 +2222,7 @@ let cBrand='all', cPrice='all', cSearch='', cCond='all', cSet='all', cSort='none
 
 function filterW() {
   return watches.filter(w => {
-    const mainBrands=['Rolex','Audemars Piguet','Patek Philippe','Richard Mille','Hublot','Cartier','BALL','TAG Heuer','Breitling'];
+    const mainBrands=['Rolex','Audemars Piguet','Patek Philippe','Richard Mille','Hublot','Cartier','BALL','TAG HEUER','BREITLING'];
     const bOk = cBrand==='all' || (cBrand==='Otros' ? !mainBrands.includes(w.brand) : w.brand===cBrand);
     const q = cSearch.toLowerCase();
     const sOk = !q || w.model.toLowerCase().includes(q) || w.brand.toLowerCase().includes(q) || w.ref.includes(q);
