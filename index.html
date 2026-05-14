@@ -388,26 +388,41 @@ body{font-family:'Jost',sans-serif;background:var(--charcoal);color:var(--cream)
   border-top:1px solid var(--border);
   border-bottom:1px solid var(--border);
 }
-.about-inner{max-width:1200px;margin:0 auto;padding:80px 48px 0}
+.about-inner{max-width:1200px;margin:0 auto;padding:80px 48px 80px}
 .about-header{text-align:center;margin-bottom:64px}
 .about-title{font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:300;font-style:italic;color:var(--cream)}
 .about-title span{color:var(--gold)}
 .about-sub{font-size:9px;letter-spacing:0.4em;text-transform:uppercase;color:var(--stone);margin-top:6px}
 
 /* Story layout */
-.about-story{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start;margin-bottom:72px}
+.about-story{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start;margin-bottom:0}
 .about-story-text{}
 .about-story-label{font-size:8.5px;letter-spacing:0.45em;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
 .about-story-heading{font-family:'Cormorant Garamond',serif;font-size:clamp(24px,3vw,34px);font-weight:300;color:var(--cream);line-height:1.25;margin-bottom:24px}
 .about-story-body{font-size:14px;font-weight:300;color:rgba(240,232,218,0.7);line-height:1.85}
 .about-story-body p+p{margin-top:14px}
 
-/* Photo grid */
-.about-photos{display:grid;grid-template-columns:1fr 1fr;gap:3px}
-.about-photo{overflow:hidden;aspect-ratio:3/4;background:#0c0a08}
-.about-photo.wide{grid-column:span 2;aspect-ratio:16/7}
-.about-photo img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.6s ease;filter:brightness(0.92) saturate(0.9)}
+/* Photo column (no crop) */
+.about-photos{display:flex;flex-direction:column;gap:6px}
+.about-photo{overflow:hidden;background:#0c0a08}
+.about-photo img{width:100%;height:auto;display:block;transition:transform 0.6s ease;filter:brightness(0.92) saturate(0.9)}
 .about-photo:hover img{transform:scale(1.04);filter:brightness(1) saturate(1)}
+
+/* Gallery Carousel */
+.gallery-section{margin:64px -48px 0;position:relative}
+.gallery-label{font-size:8px;letter-spacing:0.5em;text-transform:uppercase;color:var(--gold);text-align:center;margin-bottom:24px}
+.gallery-track-wrap{overflow:hidden;position:relative}
+.gallery-track{display:flex;gap:4px;transition:transform 0.55s cubic-bezier(0.22,1,0.36,1);will-change:transform}
+.gallery-slide{flex:0 0 auto;width:calc(25% - 3px);overflow:hidden;background:#0c0a08;aspect-ratio:2/3}
+.gallery-slide img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(0.88) saturate(0.85);transition:filter 0.4s ease}
+.gallery-slide:hover img{filter:brightness(1) saturate(1)}
+.gallery-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:10;background:rgba(26,21,18,0.8);border:1px solid var(--border);color:var(--gold);width:48px;height:48px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:26px;line-height:1;transition:background 0.2s,border-color 0.2s;padding:0}
+.gallery-nav:hover{background:var(--gold);color:var(--charcoal);border-color:var(--gold)}
+.gallery-prev{left:16px}
+.gallery-next{right:16px}
+.gallery-dots{display:flex;justify-content:center;gap:6px;margin-top:18px;padding-bottom:0}
+.gallery-dot{width:5px;height:5px;border-radius:50%;background:var(--stone);opacity:0.4;border:none;cursor:pointer;padding:0;transition:opacity 0.2s,background 0.2s}
+.gallery-dot.active{background:var(--gold);opacity:1}
 
 /* Vision / Mission */
 .about-vm{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-bottom:0}
@@ -461,17 +476,19 @@ body{font-family:'Jost',sans-serif;background:var(--charcoal);color:var(--cream)
   .about-story{grid-template-columns:1fr;gap:40px}
   .about-vm{grid-template-columns:1fr}
   .vm-card{padding:32px 28px}
-  .about-photos{grid-template-columns:1fr 1fr}
+  .gallery-section{margin-left:-24px;margin-right:-24px}
+  .gallery-slide{width:calc(33.333% - 3px)}
 }
 @media(max-width:480px){
   .about-inner{padding:48px 16px 0}.faq-inner{padding:48px 16px}
   .about-title,.faq-title{font-size:28px}
   .about-story-heading{font-size:22px}
-  .about-photos{grid-template-columns:1fr}
-  .about-photo.wide{grid-column:auto;aspect-ratio:4/3}
   .vm-card{padding:24px 20px}
   .faq-q{padding:18px 16px;font-size:15px}
   .faq-a{padding:0 16px 18px}
+  .gallery-section{margin-left:-16px;margin-right:-16px}
+  .gallery-slide{width:calc(50% - 2px)}
+  .gallery-nav{width:36px;height:36px;font-size:20px}
 }
 
 /* ══ VIDEOS ══════════════════════════════════════════════════════════════════ */
@@ -642,25 +659,46 @@ body{font-family:'Jost',sans-serif;background:var(--charcoal);color:var(--cream)
       </div>
 
       <div class="about-photos">
-        <div class="about-photo wide">
+        <div class="about-photo">
           <img src="RSH_7041.jpg" alt="Carlos Rico Rivera — Time House Mexico" loading="lazy">
         </div>
         <div class="about-photo">
           <img src="RSH_4306.jpg" alt="Carlos Rico Rivera" loading="lazy">
         </div>
         <div class="about-photo">
-          <img src="RoshVZ_keroone-47.jpg" alt="Time House Mexico" loading="lazy">
-        </div>
-        <div class="about-photo">
           <img src="RSH_9169.jpg" alt="Atención personalizada Time House" loading="lazy">
         </div>
         <div class="about-photo">
-          <img src="RSH_9458.jpg" alt="Alta Relojería Carlos Rico Rivera" loading="lazy">
+          <img src="RoshVZ_keroone-47.jpg" alt="Time House Mexico" loading="lazy">
         </div>
       </div>
     </div>
 
-    <div class="about-vm">
+    <!-- Galería de imágenes -->
+    <div class="gallery-section">
+      <div class="gallery-label">Galería</div>
+      <div class="gallery-track-wrap">
+        <div class="gallery-track" id="galleryTrack">
+          <div class="gallery-slide"><img src="RSH_4015.jpg" alt="Time House Mexico" loading="lazy"></div>
+          <div class="gallery-slide"><img src="RSH_7021.jpg" alt="Time House Mexico" loading="lazy"></div>
+          <div class="gallery-slide"><img src="RSH_7075.jpg" alt="Time House Mexico" loading="lazy"></div>
+          <div class="gallery-slide"><img src="RSH_9163.jpg" alt="Time House Mexico" loading="lazy"></div>
+          <div class="gallery-slide"><img src="RSH_9458.jpg" alt="Alta Relojería Carlos Rico Rivera" loading="lazy"></div>
+          <div class="gallery-slide"><img src="RSH_3986.jpg" alt="Time House Mexico" loading="lazy"></div>
+          <div class="gallery-slide"><img src="APP_0526.jpg" alt="Time House Mexico" loading="lazy"></div>
+          <div class="gallery-slide"><img src="APP_4484.jpg" alt="Time House Mexico" loading="lazy"></div>
+          <div class="gallery-slide"><img src="APP_4511.jpg" alt="Time House Mexico" loading="lazy"></div>
+          <div class="gallery-slide"><img src="APP_8966.jpg" alt="Time House Mexico" loading="lazy"></div>
+          <div class="gallery-slide"><img src="1715325033794.jpg" alt="Time House Mexico" loading="lazy"></div>
+          <div class="gallery-slide"><img src="1715325033837.jpg" alt="Time House Mexico" loading="lazy"></div>
+        </div>
+        <button class="gallery-nav gallery-prev" id="galleryPrev" aria-label="Anterior">&#8249;</button>
+        <button class="gallery-nav gallery-next" id="galleryNext" aria-label="Siguiente">&#8250;</button>
+      </div>
+      <div class="gallery-dots" id="galleryDots"></div>
+    </div>
+
+    <div class="about-vm" style="margin-top:64px">
       <div class="vm-card">
         <div class="vm-label">Nuestra Visión</div>
         <div class="vm-title">El referente de la alta relojería en México y Latinoamérica</div>
@@ -2031,6 +2069,81 @@ function toggleFaq(btn) {
     answer.classList.add('open');
   }
 }
+
+/* ── Gallery Carousel ─────────────────────────────────────────────────── */
+(function(){
+  const track = document.getElementById('galleryTrack');
+  const prevBtn = document.getElementById('galleryPrev');
+  const nextBtn = document.getElementById('galleryNext');
+  const dotsWrap = document.getElementById('galleryDots');
+  if(!track) return;
+
+  const slides = track.querySelectorAll('.gallery-slide');
+  const total = slides.length;
+  let perView = getPerView();
+  let cur = 0;
+  let autoTimer;
+
+  function getPerView(){
+    return window.innerWidth <= 480 ? 2 : window.innerWidth <= 900 ? 3 : 4;
+  }
+
+  const pages = Math.ceil(total / perView);
+
+  /* build dots */
+  for(let i = 0; i < pages; i++){
+    const d = document.createElement('button');
+    d.className = 'gallery-dot' + (i===0?' active':'');
+    d.addEventListener('click', () => goTo(i * perView));
+    dotsWrap.appendChild(d);
+  }
+
+  function updateDots(){
+    const page = Math.round(cur / perView);
+    dotsWrap.querySelectorAll('.gallery-dot').forEach((d,i) => d.classList.toggle('active', i===page));
+  }
+
+  function slideWidth(){
+    return slides[0].getBoundingClientRect().width + 4;
+  }
+
+  function goTo(idx){
+    const max = total - perView;
+    cur = Math.max(0, Math.min(idx, max));
+    track.style.transform = `translateX(-${cur * slideWidth()}px)`;
+    updateDots();
+  }
+
+  prevBtn.addEventListener('click', () => { goTo(cur - perView); resetAuto(); });
+  nextBtn.addEventListener('click', () => { goTo(cur + perView); resetAuto(); });
+
+  function autoNext(){
+    const next = cur + perView >= total ? 0 : cur + perView;
+    goTo(next);
+  }
+
+  function startAuto(){ autoTimer = setInterval(autoNext, 3500); }
+  function resetAuto(){ clearInterval(autoTimer); startAuto(); }
+
+  track.closest('.gallery-track-wrap').addEventListener('mouseenter', () => clearInterval(autoTimer));
+  track.closest('.gallery-track-wrap').addEventListener('mouseleave', startAuto);
+
+  /* touch swipe */
+  let touchX = 0;
+  track.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, {passive:true});
+  track.addEventListener('touchend', e => {
+    const dx = touchX - e.changedTouches[0].clientX;
+    if(Math.abs(dx) > 40){ goTo(dx > 0 ? cur + perView : cur - perView); resetAuto(); }
+  });
+
+  window.addEventListener('resize', () => {
+    perView = getPerView();
+    cur = Math.min(cur, total - perView);
+    goTo(cur);
+  });
+
+  startAuto();
+})();
 </script>
 </body>
 </html>
