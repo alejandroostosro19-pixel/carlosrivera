@@ -873,6 +873,9 @@ body{font-family:'Jost',sans-serif;background:var(--charcoal);color:var(--cream)
       <button class="fbtn" data-brand="Richard Mille">RM</button>
       <button class="fbtn" data-brand="Hublot">Hublot</button>
       <button class="fbtn" data-brand="Cartier">Cartier</button>
+      <button class="fbtn" data-brand="BALL">Ball</button>
+      <button class="fbtn" data-brand="TAG Heuer">Tag Heuer</button>
+      <button class="fbtn" data-brand="Breitling">Breitling</button>
       <button class="fbtn" data-brand="Otros">Otros</button>
     </div>
     <div class="filters-row">
@@ -2219,7 +2222,7 @@ let cBrand='all', cPrice='all', cSearch='', cCond='all', cSet='all', cSort='none
 
 function filterW() {
   return watches.filter(w => {
-    const mainBrands=['Rolex','Audemars Piguet','Patek Philippe','Richard Mille','Hublot','Cartier'];
+    const mainBrands=['Rolex','Audemars Piguet','Patek Philippe','Richard Mille','Hublot','Cartier','BALL','TAG Heuer','Breitling'];
     const bOk = cBrand==='all' || (cBrand==='Otros' ? !mainBrands.includes(w.brand) : w.brand===cBrand);
     const q = cSearch.toLowerCase();
     const sOk = !q || w.model.toLowerCase().includes(q) || w.brand.toLowerCase().includes(q) || w.ref.includes(q);
@@ -2262,7 +2265,7 @@ function renderGrid() {
           +'<span class="mpill '+(w.papers?'gold':'')+'"><span class="mdot"></span>'+(w.papers?'Papeles orig.':'Sin papeles')+'</span>'
         +'</div>'
         +'<div class="cfoot">'
-          +'<div><div class="ccur">'+(w.currency||'USD')+'</div><div class="cprice">'+fmt(w.price)+'</div></div>'
+          +'<div><div class="ccur">USD</div><div class="cprice">'+fmt(w.price)+'</div></div>'
           +(w.size?'<div class="csize">'+w.size+'</div>':'')
         +'</div>'
         +(w.source==='Masters Joyeros'?'<div class="mj-src">Masters Joyeros</div>':'')
@@ -2358,7 +2361,6 @@ function openModal(w) {
   document.getElementById('mTitle').textContent = w.model;
   document.getElementById('mRef').textContent   = 'REF# ' + w.ref + (w.year?' · '+w.year:'');
   document.getElementById('mPrice').textContent = fmt(w.price);
-  document.getElementById('mCur').textContent = w.currency || 'USD';
 
   // Set image safely
   const imgWrap = document.getElementById('mImgWrap');
