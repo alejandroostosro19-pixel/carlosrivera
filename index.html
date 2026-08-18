@@ -258,6 +258,43 @@ body{font-family:'Jost',sans-serif;background:var(--charcoal);color:var(--cream)
 .empty-state{grid-column:1/-1;padding:80px 24px;text-align:center;background:#201c18}
 .empty-state p{font-family:'Cormorant Garamond',serif;font-size:26px;font-style:italic;color:var(--stone)}
 
+/* ══ PRIVATE SELECTION ═══════════════════════════════════════════════════════ */
+#private-selection{background:#15110d;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.ps-header{padding:64px 48px 28px;text-align:center;max-width:760px;margin:0 auto}
+.ps-eyebrow{font-size:9px;letter-spacing:0.4em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.ps-title{font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:300;font-style:italic;color:var(--cream)}
+.ps-title span{color:var(--gold);font-style:normal}
+.ps-divider{width:60px;height:1px;background:var(--gold);margin:22px auto 26px}
+.ps-desc p{font-size:13px;line-height:1.85;color:var(--stone-mid);margin-bottom:14px;font-weight:300}
+.ps-desc p:last-child{margin-bottom:0}
+.ps-wrap{padding:36px 48px 20px}
+.ps-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+  gap:1px;background:var(--border);
+}
+.pscard{background:#201c18;position:relative;overflow:hidden;display:flex;flex-direction:column;transition:background 0.2s,transform 0.25s,box-shadow 0.25s}
+.pscard:hover{background:#2a2520;transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,0,0,0.5);z-index:2}
+.ps-img{position:relative;aspect-ratio:1/1;background:#221d18;display:flex;align-items:center;justify-content:center;padding:16px}
+.ps-badge{
+  position:absolute;top:8px;right:8px;font-size:7.5px;letter-spacing:0.14em;
+  text-transform:uppercase;padding:4px 8px;border-radius:1px;font-weight:500;z-index:2;
+  background:var(--gold);color:var(--charcoal);
+}
+.ps-body{padding:16px 18px 18px;border-top:1px solid var(--border);display:flex;flex-direction:column;flex:1}
+.ps-collection{font-size:8.5px;letter-spacing:0.32em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
+.ps-model{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:400;color:var(--cream);line-height:1.25;margin-bottom:6px}
+.ps-ref{font-size:9.5px;color:var(--stone);margin-bottom:14px}
+.ps-foot{display:flex;align-items:flex-end;justify-content:space-between;border-top:1px solid var(--border);padding-top:10px;margin-top:auto}
+.ps-cur{font-family:'Jost',sans-serif;font-size:8.5px;color:var(--stone);letter-spacing:0.1em;margin-bottom:1px}
+.ps-price{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;color:var(--cream);line-height:1}
+.ps-link{
+  display:block;text-align:center;margin-top:12px;padding:9px;
+  font-family:'Jost',sans-serif;font-size:8.5px;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--stone-mid);border:1px solid var(--border);text-decoration:none;transition:all 0.2s;
+}
+.ps-link:hover{border-color:var(--gold);color:var(--gold)}
+.ps-note{padding:8px 48px 56px;text-align:center;font-size:9.5px;letter-spacing:0.04em;line-height:1.7;color:var(--stone);opacity:0.75;max-width:640px;margin:0 auto}
+
 /* ── MODAL ── */
 .modal-overlay{
   display:none;position:fixed;inset:0;
@@ -622,6 +659,7 @@ body{font-family:'Jost',sans-serif;background:var(--charcoal);color:var(--cream)
     <div class="hdesc">Relojes y joyería de las más selectas maisons del mundo.<br>Cada pieza, una historia de excelencia artesanal.</div>
     <div class="hcta">
       <a href="#catalogo" class="btn-gold" onclick="scrollToCat(event)">Ver Catálogo</a>
+      <a href="#private-selection" class="btn-outline" onclick="scrollToPS(event)">Private Selection</a>
       <a href="tel:+525518519137" class="btn-outline">Contacto</a>
     </div>
     <div class="social-bar">
@@ -851,6 +889,21 @@ body{font-family:'Jost',sans-serif;background:var(--charcoal);color:var(--cream)
 
     </div>
   </div>
+</section>
+
+<!-- PRIVATE SELECTION -->
+<section id="private-selection">
+  <div class="ps-header">
+    <div class="ps-eyebrow">Colección Exclusiva</div>
+    <div class="ps-title">Private <span>Selection</span></div>
+    <div class="ps-divider"></div>
+    <div class="ps-desc">
+      <p>Una selección cuidadosamente curada de relojes completamente nuevos, disponibles bajo condiciones especiales y con garantía.</p>
+      <p>Cada pieza ha sido seleccionada por su excepcional valor y representa una oportunidad única de adquirir una pieza nueva a un precio extraordinario. Las referencias y cantidades son limitadas, por lo que estas condiciones no estarán disponibles de manera permanente ni se repetirán una vez agotado el inventario.</p>
+    </div>
+  </div>
+  <div class="ps-wrap"><div class="ps-grid" id="psGrid"></div></div>
+  <div class="ps-note">Precios finales en Dólares Americanos (USD), IVA incluido. Disponibilidad e inventario limitados — sujeto a cambios sin previo aviso.</div>
 </section>
 
 <!-- CATALOG -->
@@ -2190,6 +2243,32 @@ watches.push(
   {brand:'Zenith',model:'Zenith 36 mm',ref:'21929',price:78219.0,price_original:131219.0,on_sale:true,size:'',condition:'Unworn',box:true,papers:true,year:'',k:'MJ_21929',currency:'MXN',source:'Masters Joyeros',img:'https://mastersjoyeros.com/wp-content/uploads/2025/07/Captura-de-pantalla-2025-07-02-a-las-12.52.13 p.m.png',url:'https://mastersjoyeros.com/tienda/relojes/super-sale/zenith-36-mm/'}
 );
 
+// ── PRIVATE SELECTION DATA ──────────────────────────────────────────────────
+const psWatches = [
+  {brand:'Breitling',collection:"Superocean",model:"Superocean Automatic 36",ref:"A17316D81C1A1",price:5040,url:"https://www.breitling.com/mx-es/watches/superocean/superocean-automatic-36/A17316D81C1A1/?srsltid=AfmBOorSEQZ9w6mAygUOawoiYi73osqp3tFT6mHK8sAPxr0hXWJAJYz3",k:"PS_A17316D81C1A1"},
+  {brand:'Breitling',collection:"Avenger",model:"Avenger Automatic GMT 43",ref:"A32397101B1X2",price:5250,url:"https://www.breitling.com/gb-en/watches/avenger/avenger-automatic-gmt-43/A32397101B1X2/?srsltid=AfmBOorTUW9Mx8aDiNQnsu2nj91iHLpQZS8GrnDBNGMaCKmd7Iin8vxA",k:"PS_A32397101B1X2"},
+  {brand:'Breitling',collection:"Avenger",model:"Avenger Automatic GMT 45",ref:"A32395101C1X2",price:5460,url:"https://www.breitling.com/rs-en/watches/avenger/avenger-automatic-gmt-45/A32395101C1X2/?srsltid=AfmBOopRvr_GkWXJ7DdKJk9cKSuONYQOH2X8YuYC1apH0y3aKkMT5j3E",k:"PS_A32395101C1X2"},
+  {brand:'Breitling',collection:"Superocean Heritage",model:"Superocean Heritage B20 Automatic 42",ref:"AB2010121B1S1",price:6090,url:"https://www.breitling.com/mx-es/watches/superocean-heritage/superocean-heritage-b20-automatic-42/AB2010121B1A1/?srsltid=AfmBOooeAX8DSt-Ig6QRi5gbdzp3WGotoDfUzeCp3GihaqpgzgEWlrBJ",k:"PS_AB2010121B1S1"},
+  {brand:'Breitling',collection:"Superocean Heritage",model:"Superocean Heritage B20 Automatic 42",ref:"AB2010161C1S1",price:6090,url:"https://www.breitling.com/mx-es/watches/superocean-heritage/superocean-heritage-b20-automatic-42/AB2010161C1S1/?srsltid=AfmBOopl4SFrsmew8VbO3Vhi56A8H-n9p0mxLz1NrzBA3ywg6a6fjNdT",k:"PS_AB2010161C1S1"},
+  {brand:'Breitling',collection:"Superocean Heritage",model:"Superocean Heritage B20 Automatic 44",ref:"AB2030161C1S1",price:6140,url:"https://www.breitling.com/dz-en/watches/superocean-heritage/superocean-heritage-b20-automatic-44/AB2030161C1S1/?srsltid=AfmBOopINjnEDMSpzAAuonos943MHIN51K_9UnqzL2ogdtWmTd_kAhVr",k:"PS_AB2030161C1S1"},
+  {brand:'Breitling',collection:"Superocean Heritage",model:"Superocean Heritage B20 Automatic 44",ref:"AB2030121B1S1",price:6140,url:"https://www.breitling.com/mx-es/watches/superocean-heritage/superocean-heritage-b20-automatic-44/AB2030121B1S1/?srsltid=AfmBOop_blITnaqbNywe6zBP5mSrxoSz2qCkevyOvjEHLG1CE1h8MD3N",k:"PS_AB2030121B1S1"},
+  {brand:'Breitling',collection:"Superocean Heritage",model:"Superocean Heritage B20 Automatic 46",ref:"AB2020161C1S1",price:6200,url:"https://www.breitling.com/mx-es/watches/superocean-heritage/superocean-heritage-b20-automatic-46/AB2020161C1S1/?srsltid=AfmBOor7XEIVeh0t0N-GU-Ok4KTAohUdfCEFqoknXLpwS2v6fhcwR2Z5",k:"PS_AB2020161C1S1"},
+  {brand:'Breitling',collection:"Superocean Heritage",model:"Superocean Heritage B20 Automatic 46",ref:"AB2020121B1S1",price:6200,url:"https://www.breitling.com/bn-en/watches/superocean-heritage/superocean-heritage-b20-automatic-46/AB2020121B1S1/?srsltid=AfmBOoq9P55b3e7PPXI2QZebCZzvrix8Ao_OBotEFgQ4cl5HATsSFmUz",k:"PS_AB2020121B1S1"},
+  {brand:'Breitling',collection:"Avenger",model:"Avenger Chronograph 45",ref:"A13317101B1X1",price:6670,url:"https://www.breitling.com/mx-es/watches/avenger/avenger-chronograph-45/A13317101B1X1/?srsltid=AfmBOoqEhZ6TNI3AMP90M0AT9iPsyo2I09fd2salPKx9DTRaotBuM4Bf",k:"PS_A13317101B1X1"},
+  {brand:'Breitling',collection:"Avenger",model:"Avenger Chronograph 45",ref:"A13317101C1X1",price:6670,url:"https://www.breitling.com/es-es/watches/avenger/avenger-chronograph-45/A13317101C1X1/?srsltid=AfmBOorg9ML_7qp1KBNADp3QeGS602-_rR-Loc_feWx5fCAPpDSxNe2U",k:"PS_A13317101C1X1"},
+  {brand:'Breitling',collection:"Superocean",model:"Superocean Automatic 48",ref:"V17369161C1S1",price:6770,url:"https://www.breitling.com/mx-es/watches/superocean/superocean-automatic-48/V17369161C1S1/?srsltid=AfmBOopOXYdwa10EEGoilsXYHPhrtT5z0O95KKvxXH9j9rmCyVC49yZ_",k:"PS_V17369161C1S1"},
+  {brand:'Breitling',collection:"Superocean Heritage",model:"Superocean Heritage Chronograph 44",ref:"A13313121B1S1",price:7400,url:"https://www.breitling.com/es-es/watches/superocean-heritage/superocean-heritage-chronograph-44/A13313121B1S1/?srsltid=AfmBOoonScn9Myx2twqtMBH61MMY4XQMJKa9LSqlNR3Pzh6pKJfmSw3o",k:"PS_A13313121B1S1"},
+  {brand:'Breitling',collection:"Superocean Heritage",model:"Superocean Heritage Chronograph 44",ref:"A13313161C1S1",price:7460,url:"https://www.breitling.com/mx-es/watches/superocean-heritage/superocean-heritage-chronograph-44/A13313161C1S1/?srsltid=AfmBOopJxXNlcmgdWQ1Gthgh3I8McpkYZlbB1l4wn8r8fXjc9-_8t6Do",k:"PS_A13313161C1S1"},
+  {brand:'Breitling',collection:"Premier",model:"Premier Chronograph 42",ref:"A13315351B1X1",price:7560,url:"https://www.breitling.com/mx-es/watches/premier/premier-chronograph-42/A13315351B1X1/?srsltid=AfmBOooJA33lXsEk24YMsZq1M2nx63SXiU0TrD-pzX2vbaibw52r5f7z",k:"PS_A13315351B1X1"},
+  {brand:'Breitling',collection:"Premier",model:"Premier Chronograph 42",ref:"A13315351C1P1",price:7880,url:"https://www.breitling.com/mx-es/watches/premier/premier-chronograph-42/A13315351C1P1/?srsltid=AfmBOoo5HnNVY_B-GcwOs5e-FM5HeqN0JX41uwnoLggudSwtZVgTz3B7",k:"PS_A13315351C1P1"},
+  {brand:'Breitling',collection:"Navitimer",model:"Navitimer Automatic 35",ref:"U17395211A1P3",price:8190,url:"https://www.breitling.com/mx-es/watches/navitimer/navitimer-automatic-35/U17395211A1P3/?srsltid=AfmBOor1SVunrnZCIKuzU5MNDQ3AGS56oAaP2tO3Z6z34bYAbqkGT9S9",k:"PS_U17395211A1P3"},
+  {brand:'Breitling',collection:"Superocean Heritage",model:"Superocean Heritage Chronograph 44 Outerknown",ref:"M133132A1C1W1",price:8400,url:"https://www.breitling.com/mx-es/watches/superocean-heritage/superocean-heritage-chronograph-44/M133132A1C1W1/?srsltid=AfmBOopHH0EUqO48rhr7WnojdPBqJOMK6ADcujfQl1I2d5IkpWZAb4zx",k:"PS_M133132A1C1W1"},
+  {brand:'Breitling',collection:"Superocean Heritage",model:"Superocean Heritage B01 Chronograph 44",ref:"AB0162161C1S1",price:9660,url:"https://www.breitling.com/mt-en/watches/superocean-heritage/superocean-heritage-b01-chronograph-44/AB0162161C1S1/?srsltid=AfmBOorQ_JvLN-p1z_BEUtT6gYzjQaxzCQ4NHZLQuVhipuO_mIvdqvN5",k:"PS_AB0162161C1S1"},
+  {brand:'Breitling',collection:"Superocean Heritage",model:"Superocean Heritage B01 Chronograph 44",ref:"AB0162121B1S1",price:9710,url:"https://www.breitling.com/mx-es/watches/superocean-heritage/superocean-heritage-b01-chronograph-44/AB0162121B1S1/?srsltid=AfmBOorjITnda4mnPrsEX9CKaPDmCVA4K4iNoHUEkbUP8DnEFEe_C5VM",k:"PS_AB0162121B1S1"},
+  {brand:'Breitling',collection:"Premier",model:"Premier B01 Chronograph 42",ref:"AB0118A61C1P2",price:10030,url:"https://www.breitling.com/gt-es/watches/premier/premier-b01-chronograph-42/AB0118221C1P2/?srsltid=AfmBOoqRus6tF5FmA3mvdies2purb-tYwAa11RowrF2nog3dv7skOr-L",k:"PS_AB0118A61C1P2"},
+  {brand:'Breitling',collection:"Navitimer",model:"Navitimer B01 Chronograph 43 Swissair",ref:"AB01211B1B1X1",price:10290,url:"https://www.breitling.com/us-en/watches/navitimer/navitimer-b01-chronograph-43/AB01211B1B1X1/?srsltid=AfmBOopPmfCudxhJVEP1CD0HbttsCbB7m65asvDW6Lm0TZKU7CHAR2x_",k:"PS_AB01211B1B1X1"}
+];
+
 // ── BG SLIDESHOW ──────────────────────────────────────────────────────────────
 const bgTrack = document.getElementById('bgTrack');
 const bgDots  = document.getElementById('bgDots');
@@ -2215,6 +2294,7 @@ setTimeout(() => setInterval(() => bgTo(bgCur + 1), 5000), 4800);
 
 
 function scrollToCat(e) { if(e) e.preventDefault(); document.getElementById('catalogo').scrollIntoView({behavior:'smooth'}); }
+function scrollToPS(e) { if(e) e.preventDefault(); document.getElementById('private-selection').scrollIntoView({behavior:'smooth'}); }
 
 // ── CATALOG ───────────────────────────────────────────────────────────────────
 const fmt = n => '$' + n.toLocaleString('en-US');
@@ -2299,6 +2379,31 @@ function renderGrid() {
   });
   updateCmpBtns();
 }
+
+// ── PRIVATE SELECTION ─────────────────────────────────────────────────────────
+function renderPS() {
+  const psGrid = document.getElementById('psGrid');
+  if(!psGrid) return;
+  psGrid.innerHTML = psWatches.map(w => {
+    const safeUrl = w.url.replace(/&/g,'&amp;').replace(/"/g,'&quot;');
+    return '<article class="pscard">'
+      +'<div class="ps-img">'
+        +'<span class="ps-badge">Nuevo · Garantía</span>'
+        +svgPh(w.brand)
+      +'</div>'
+      +'<div class="ps-body">'
+        +'<div class="ps-collection">'+w.brand+' · '+w.collection+'</div>'
+        +'<div class="ps-model">'+w.model+'</div>'
+        +'<div class="ps-ref">REF# '+w.ref+'</div>'
+        +'<div class="ps-foot">'
+          +'<div><div class="ps-cur">USD</div><div class="ps-price">'+fmt(w.price)+'</div></div>'
+        +'</div>'
+        +'<a class="ps-link" href="'+safeUrl+'" target="_blank" rel="noopener">Ver ficha oficial</a>'
+      +'</div>'
+    +'</article>';
+  }).join('');
+}
+renderPS();
 
 // ── COMPARADOR ────────────────────────────────────────────────────────────────
 const MAX_CMP = 3;
