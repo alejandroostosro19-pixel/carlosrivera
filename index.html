@@ -343,6 +343,9 @@ body{font-family:'Jost',sans-serif;background:var(--charcoal);color:var(--cream)
 .ps-foot{display:flex;align-items:flex-end;justify-content:space-between;border-top:1px solid var(--border);padding-top:10px;margin-top:auto}
 .ps-cur{font-family:'Jost',sans-serif;font-size:8.5px;color:var(--stone);letter-spacing:0.1em;margin-bottom:1px}
 .ps-price{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;color:var(--cream);line-height:1}
+.ps-price-row{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.ps-price-original{font-family:'Cormorant Garamond',serif;font-size:13px;font-weight:400;color:var(--stone);text-decoration:line-through;line-height:1;opacity:0.8}
+.ps-price-sale{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500;color:#e0453c;line-height:1}
 .ps-link{
   display:block;text-align:center;margin-top:12px;padding:9px;
   font-family:'Jost',sans-serif;font-size:8.5px;letter-spacing:0.2em;text-transform:uppercase;
@@ -463,7 +466,9 @@ body{font-family:'Jost',sans-serif;background:var(--charcoal);color:var(--cream)
   .mpill{font-size:7px;gap:2px}
   .cfoot,.ps-foot{padding-top:6px}
   .ccur,.ps-cur{font-size:7px}
-  .cprice,.ps-price{font-size:14px}
+  .cprice,.ps-price,.ps-price-sale{font-size:14px}
+  .ps-price-original{font-size:10px}
+  .ps-price-row{gap:5px}
   .csize{font-size:7.5px}
   .cbadge,.ps-badge{font-size:6px;letter-spacing:0.08em;padding:2px 5px;top:5px;right:5px}
   .ps-header{padding:40px 16px 20px}
@@ -2356,28 +2361,28 @@ const psImg = {
 };
 
 const psWatches = [
-  {brand:'Breitling',collection:"Superocean",model:"Superocean Automatic 36",ref:"A17316D81C1A1",price:5040,url:"https://www.breitling.com/mx-es/watches/superocean/superocean-automatic-36/A17316D81C1A1/?srsltid=AfmBOorSEQZ9w6mAygUOawoiYi73osqp3tFT6mHK8sAPxr0hXWJAJYz3",k:"PS_A17316D81C1A1"},
-  {brand:'Breitling',collection:"Avenger",model:"Avenger Automatic GMT 43",ref:"A32397101B1X2",price:5250,url:"https://www.breitling.com/gb-en/watches/avenger/avenger-automatic-gmt-43/A32397101B1X2/?srsltid=AfmBOorTUW9Mx8aDiNQnsu2nj91iHLpQZS8GrnDBNGMaCKmd7Iin8vxA",k:"PS_A32397101B1X2"},
-  {brand:'Breitling',collection:"Avenger",model:"Avenger Automatic GMT 45",ref:"A32395101C1X2",price:5460,url:"https://www.breitling.com/rs-en/watches/avenger/avenger-automatic-gmt-45/A32395101C1X2/?srsltid=AfmBOopRvr_GkWXJ7DdKJk9cKSuONYQOH2X8YuYC1apH0y3aKkMT5j3E",k:"PS_A32395101C1X2"},
-  {brand:'Breitling',collection:"Superocean Heritage",model:"Superocean Heritage B20 Automatic 42",ref:"AB2010121B1S1",price:6090,url:"https://www.breitling.com/mx-es/watches/superocean-heritage/superocean-heritage-b20-automatic-42/AB2010121B1A1/?srsltid=AfmBOooeAX8DSt-Ig6QRi5gbdzp3WGotoDfUzeCp3GihaqpgzgEWlrBJ",k:"PS_AB2010121B1S1"},
-  {brand:'Breitling',collection:"Superocean Heritage",model:"Superocean Heritage B20 Automatic 42",ref:"AB2010161C1S1",price:6090,url:"https://www.breitling.com/mx-es/watches/superocean-heritage/superocean-heritage-b20-automatic-42/AB2010161C1S1/?srsltid=AfmBOopl4SFrsmew8VbO3Vhi56A8H-n9p0mxLz1NrzBA3ywg6a6fjNdT",k:"PS_AB2010161C1S1"},
-  {brand:'Breitling',collection:"Superocean Heritage",model:"Superocean Heritage B20 Automatic 44",ref:"AB2030161C1S1",price:6140,url:"https://www.breitling.com/dz-en/watches/superocean-heritage/superocean-heritage-b20-automatic-44/AB2030161C1S1/?srsltid=AfmBOopINjnEDMSpzAAuonos943MHIN51K_9UnqzL2ogdtWmTd_kAhVr",k:"PS_AB2030161C1S1"},
-  {brand:'Breitling',collection:"Superocean Heritage",model:"Superocean Heritage B20 Automatic 44",ref:"AB2030121B1S1",price:6140,url:"https://www.breitling.com/mx-es/watches/superocean-heritage/superocean-heritage-b20-automatic-44/AB2030121B1S1/?srsltid=AfmBOop_blITnaqbNywe6zBP5mSrxoSz2qCkevyOvjEHLG1CE1h8MD3N",k:"PS_AB2030121B1S1"},
-  {brand:'Breitling',collection:"Superocean Heritage",model:"Superocean Heritage B20 Automatic 46",ref:"AB2020161C1S1",price:6200,url:"https://www.breitling.com/mx-es/watches/superocean-heritage/superocean-heritage-b20-automatic-46/AB2020161C1S1/?srsltid=AfmBOor7XEIVeh0t0N-GU-Ok4KTAohUdfCEFqoknXLpwS2v6fhcwR2Z5",k:"PS_AB2020161C1S1"},
-  {brand:'Breitling',collection:"Superocean Heritage",model:"Superocean Heritage B20 Automatic 46",ref:"AB2020121B1S1",price:6200,url:"https://www.breitling.com/bn-en/watches/superocean-heritage/superocean-heritage-b20-automatic-46/AB2020121B1S1/?srsltid=AfmBOoq9P55b3e7PPXI2QZebCZzvrix8Ao_OBotEFgQ4cl5HATsSFmUz",k:"PS_AB2020121B1S1"},
-  {brand:'Breitling',collection:"Avenger",model:"Avenger Chronograph 45",ref:"A13317101B1X1",price:6670,url:"https://www.breitling.com/mx-es/watches/avenger/avenger-chronograph-45/A13317101B1X1/?srsltid=AfmBOoqEhZ6TNI3AMP90M0AT9iPsyo2I09fd2salPKx9DTRaotBuM4Bf",k:"PS_A13317101B1X1"},
-  {brand:'Breitling',collection:"Avenger",model:"Avenger Chronograph 45",ref:"A13317101C1X1",price:6670,url:"https://www.breitling.com/es-es/watches/avenger/avenger-chronograph-45/A13317101C1X1/?srsltid=AfmBOorg9ML_7qp1KBNADp3QeGS602-_rR-Loc_feWx5fCAPpDSxNe2U",k:"PS_A13317101C1X1"},
-  {brand:'Breitling',collection:"Superocean",model:"Superocean Automatic 48",ref:"V17369161C1S1",price:6770,url:"https://www.breitling.com/mx-es/watches/superocean/superocean-automatic-48/V17369161C1S1/?srsltid=AfmBOopOXYdwa10EEGoilsXYHPhrtT5z0O95KKvxXH9j9rmCyVC49yZ_",k:"PS_V17369161C1S1"},
-  {brand:'Breitling',collection:"Superocean Heritage",model:"Superocean Heritage Chronograph 44",ref:"A13313121B1S1",price:7400,url:"https://www.breitling.com/es-es/watches/superocean-heritage/superocean-heritage-chronograph-44/A13313121B1S1/?srsltid=AfmBOoonScn9Myx2twqtMBH61MMY4XQMJKa9LSqlNR3Pzh6pKJfmSw3o",k:"PS_A13313121B1S1"},
-  {brand:'Breitling',collection:"Superocean Heritage",model:"Superocean Heritage Chronograph 44",ref:"A13313161C1S1",price:7460,url:"https://www.breitling.com/mx-es/watches/superocean-heritage/superocean-heritage-chronograph-44/A13313161C1S1/?srsltid=AfmBOopJxXNlcmgdWQ1Gthgh3I8McpkYZlbB1l4wn8r8fXjc9-_8t6Do",k:"PS_A13313161C1S1"},
-  {brand:'Breitling',collection:"Premier",model:"Premier Chronograph 42",ref:"A13315351B1X1",price:7560,url:"https://www.breitling.com/mx-es/watches/premier/premier-chronograph-42/A13315351B1X1/?srsltid=AfmBOooJA33lXsEk24YMsZq1M2nx63SXiU0TrD-pzX2vbaibw52r5f7z",k:"PS_A13315351B1X1"},
-  {brand:'Breitling',collection:"Premier",model:"Premier Chronograph 42",ref:"A13315351C1P1",price:7880,url:"https://www.breitling.com/mx-es/watches/premier/premier-chronograph-42/A13315351C1P1/?srsltid=AfmBOoo5HnNVY_B-GcwOs5e-FM5HeqN0JX41uwnoLggudSwtZVgTz3B7",k:"PS_A13315351C1P1"},
-  {brand:'Breitling',collection:"Navitimer",model:"Navitimer Automatic 35",ref:"U17395211A1P3",price:8190,url:"https://www.breitling.com/mx-es/watches/navitimer/navitimer-automatic-35/U17395211A1P3/?srsltid=AfmBOor1SVunrnZCIKuzU5MNDQ3AGS56oAaP2tO3Z6z34bYAbqkGT9S9",k:"PS_U17395211A1P3"},
-  {brand:'Breitling',collection:"Superocean Heritage",model:"Superocean Heritage Chronograph 44 Outerknown",ref:"M133132A1C1W1",price:8400,url:"https://www.breitling.com/mx-es/watches/superocean-heritage/superocean-heritage-chronograph-44/M133132A1C1W1/?srsltid=AfmBOopHH0EUqO48rhr7WnojdPBqJOMK6ADcujfQl1I2d5IkpWZAb4zx",k:"PS_M133132A1C1W1"},
-  {brand:'Breitling',collection:"Superocean Heritage",model:"Superocean Heritage B01 Chronograph 44",ref:"AB0162161C1S1",price:9660,url:"https://www.breitling.com/mt-en/watches/superocean-heritage/superocean-heritage-b01-chronograph-44/AB0162161C1S1/?srsltid=AfmBOorQ_JvLN-p1z_BEUtT6gYzjQaxzCQ4NHZLQuVhipuO_mIvdqvN5",k:"PS_AB0162161C1S1"},
-  {brand:'Breitling',collection:"Superocean Heritage",model:"Superocean Heritage B01 Chronograph 44",ref:"AB0162121B1S1",price:9710,url:"https://www.breitling.com/mx-es/watches/superocean-heritage/superocean-heritage-b01-chronograph-44/AB0162121B1S1/?srsltid=AfmBOorjITnda4mnPrsEX9CKaPDmCVA4K4iNoHUEkbUP8DnEFEe_C5VM",k:"PS_AB0162121B1S1"},
-  {brand:'Breitling',collection:"Premier",model:"Premier B01 Chronograph 42",ref:"AB0118A61C1P2",price:10030,url:"https://www.breitling.com/gt-es/watches/premier/premier-b01-chronograph-42/AB0118221C1P2/?srsltid=AfmBOoqRus6tF5FmA3mvdies2purb-tYwAa11RowrF2nog3dv7skOr-L",k:"PS_AB0118A61C1P2"},
-  {brand:'Breitling',collection:"Navitimer",model:"Navitimer B01 Chronograph 43 Swissair",ref:"AB01211B1B1X1",price:10290,url:"https://www.breitling.com/us-en/watches/navitimer/navitimer-b01-chronograph-43/AB01211B1B1X1/?srsltid=AfmBOopPmfCudxhJVEP1CD0HbttsCbB7m65asvDW6Lm0TZKU7CHAR2x_",k:"PS_AB01211B1B1X1"}
+  {brand:'Breitling',collection:"Superocean",model:"Superocean Automatic 36",ref:"A17316D81C1A1",price:4284,priceOriginal:5040,url:"https://www.breitling.com/mx-es/watches/superocean/superocean-automatic-36/A17316D81C1A1/?srsltid=AfmBOorSEQZ9w6mAygUOawoiYi73osqp3tFT6mHK8sAPxr0hXWJAJYz3",k:"PS_A17316D81C1A1"},
+  {brand:'Breitling',collection:"Avenger",model:"Avenger Automatic GMT 43",ref:"A32397101B1X2",price:4462.5,priceOriginal:5250,url:"https://www.breitling.com/gb-en/watches/avenger/avenger-automatic-gmt-43/A32397101B1X2/?srsltid=AfmBOorTUW9Mx8aDiNQnsu2nj91iHLpQZS8GrnDBNGMaCKmd7Iin8vxA",k:"PS_A32397101B1X2"},
+  {brand:'Breitling',collection:"Avenger",model:"Avenger Automatic GMT 45",ref:"A32395101C1X2",price:4641,priceOriginal:5460,url:"https://www.breitling.com/rs-en/watches/avenger/avenger-automatic-gmt-45/A32395101C1X2/?srsltid=AfmBOopRvr_GkWXJ7DdKJk9cKSuONYQOH2X8YuYC1apH0y3aKkMT5j3E",k:"PS_A32395101C1X2"},
+  {brand:'Breitling',collection:"Superocean Heritage",model:"Superocean Heritage B20 Automatic 42",ref:"AB2010121B1S1",price:5176.5,priceOriginal:6090,url:"https://www.breitling.com/mx-es/watches/superocean-heritage/superocean-heritage-b20-automatic-42/AB2010121B1A1/?srsltid=AfmBOooeAX8DSt-Ig6QRi5gbdzp3WGotoDfUzeCp3GihaqpgzgEWlrBJ",k:"PS_AB2010121B1S1"},
+  {brand:'Breitling',collection:"Superocean Heritage",model:"Superocean Heritage B20 Automatic 42",ref:"AB2010161C1S1",price:5176.5,priceOriginal:6090,url:"https://www.breitling.com/mx-es/watches/superocean-heritage/superocean-heritage-b20-automatic-42/AB2010161C1S1/?srsltid=AfmBOopl4SFrsmew8VbO3Vhi56A8H-n9p0mxLz1NrzBA3ywg6a6fjNdT",k:"PS_AB2010161C1S1"},
+  {brand:'Breitling',collection:"Superocean Heritage",model:"Superocean Heritage B20 Automatic 44",ref:"AB2030161C1S1",price:5219,priceOriginal:6140,url:"https://www.breitling.com/dz-en/watches/superocean-heritage/superocean-heritage-b20-automatic-44/AB2030161C1S1/?srsltid=AfmBOopINjnEDMSpzAAuonos943MHIN51K_9UnqzL2ogdtWmTd_kAhVr",k:"PS_AB2030161C1S1"},
+  {brand:'Breitling',collection:"Superocean Heritage",model:"Superocean Heritage B20 Automatic 44",ref:"AB2030121B1S1",price:5219,priceOriginal:6140,url:"https://www.breitling.com/mx-es/watches/superocean-heritage/superocean-heritage-b20-automatic-44/AB2030121B1S1/?srsltid=AfmBOop_blITnaqbNywe6zBP5mSrxoSz2qCkevyOvjEHLG1CE1h8MD3N",k:"PS_AB2030121B1S1"},
+  {brand:'Breitling',collection:"Superocean Heritage",model:"Superocean Heritage B20 Automatic 46",ref:"AB2020161C1S1",price:5270,priceOriginal:6200,url:"https://www.breitling.com/mx-es/watches/superocean-heritage/superocean-heritage-b20-automatic-46/AB2020161C1S1/?srsltid=AfmBOor7XEIVeh0t0N-GU-Ok4KTAohUdfCEFqoknXLpwS2v6fhcwR2Z5",k:"PS_AB2020161C1S1"},
+  {brand:'Breitling',collection:"Superocean Heritage",model:"Superocean Heritage B20 Automatic 46",ref:"AB2020121B1S1",price:5270,priceOriginal:6200,url:"https://www.breitling.com/bn-en/watches/superocean-heritage/superocean-heritage-b20-automatic-46/AB2020121B1S1/?srsltid=AfmBOoq9P55b3e7PPXI2QZebCZzvrix8Ao_OBotEFgQ4cl5HATsSFmUz",k:"PS_AB2020121B1S1"},
+  {brand:'Breitling',collection:"Avenger",model:"Avenger Chronograph 45",ref:"A13317101B1X1",price:5669.5,priceOriginal:6670,url:"https://www.breitling.com/mx-es/watches/avenger/avenger-chronograph-45/A13317101B1X1/?srsltid=AfmBOoqEhZ6TNI3AMP90M0AT9iPsyo2I09fd2salPKx9DTRaotBuM4Bf",k:"PS_A13317101B1X1"},
+  {brand:'Breitling',collection:"Avenger",model:"Avenger Chronograph 45",ref:"A13317101C1X1",price:5669.5,priceOriginal:6670,url:"https://www.breitling.com/es-es/watches/avenger/avenger-chronograph-45/A13317101C1X1/?srsltid=AfmBOorg9ML_7qp1KBNADp3QeGS602-_rR-Loc_feWx5fCAPpDSxNe2U",k:"PS_A13317101C1X1"},
+  {brand:'Breitling',collection:"Superocean",model:"Superocean Automatic 48",ref:"V17369161C1S1",price:5754.5,priceOriginal:6770,url:"https://www.breitling.com/mx-es/watches/superocean/superocean-automatic-48/V17369161C1S1/?srsltid=AfmBOopOXYdwa10EEGoilsXYHPhrtT5z0O95KKvxXH9j9rmCyVC49yZ_",k:"PS_V17369161C1S1"},
+  {brand:'Breitling',collection:"Superocean Heritage",model:"Superocean Heritage Chronograph 44",ref:"A13313121B1S1",price:6290,priceOriginal:7400,url:"https://www.breitling.com/es-es/watches/superocean-heritage/superocean-heritage-chronograph-44/A13313121B1S1/?srsltid=AfmBOoonScn9Myx2twqtMBH61MMY4XQMJKa9LSqlNR3Pzh6pKJfmSw3o",k:"PS_A13313121B1S1"},
+  {brand:'Breitling',collection:"Superocean Heritage",model:"Superocean Heritage Chronograph 44",ref:"A13313161C1S1",price:6341,priceOriginal:7460,url:"https://www.breitling.com/mx-es/watches/superocean-heritage/superocean-heritage-chronograph-44/A13313161C1S1/?srsltid=AfmBOopJxXNlcmgdWQ1Gthgh3I8McpkYZlbB1l4wn8r8fXjc9-_8t6Do",k:"PS_A13313161C1S1"},
+  {brand:'Breitling',collection:"Premier",model:"Premier Chronograph 42",ref:"A13315351B1X1",price:6426,priceOriginal:7560,url:"https://www.breitling.com/mx-es/watches/premier/premier-chronograph-42/A13315351B1X1/?srsltid=AfmBOooJA33lXsEk24YMsZq1M2nx63SXiU0TrD-pzX2vbaibw52r5f7z",k:"PS_A13315351B1X1"},
+  {brand:'Breitling',collection:"Premier",model:"Premier Chronograph 42",ref:"A13315351C1P1",price:6698,priceOriginal:7880,url:"https://www.breitling.com/mx-es/watches/premier/premier-chronograph-42/A13315351C1P1/?srsltid=AfmBOoo5HnNVY_B-GcwOs5e-FM5HeqN0JX41uwnoLggudSwtZVgTz3B7",k:"PS_A13315351C1P1"},
+  {brand:'Breitling',collection:"Navitimer",model:"Navitimer Automatic 35",ref:"U17395211A1P3",price:6961.5,priceOriginal:8190,url:"https://www.breitling.com/mx-es/watches/navitimer/navitimer-automatic-35/U17395211A1P3/?srsltid=AfmBOor1SVunrnZCIKuzU5MNDQ3AGS56oAaP2tO3Z6z34bYAbqkGT9S9",k:"PS_U17395211A1P3"},
+  {brand:'Breitling',collection:"Superocean Heritage",model:"Superocean Heritage Chronograph 44 Outerknown",ref:"M133132A1C1W1",price:7140,priceOriginal:8400,url:"https://www.breitling.com/mx-es/watches/superocean-heritage/superocean-heritage-chronograph-44/M133132A1C1W1/?srsltid=AfmBOopHH0EUqO48rhr7WnojdPBqJOMK6ADcujfQl1I2d5IkpWZAb4zx",k:"PS_M133132A1C1W1"},
+  {brand:'Breitling',collection:"Superocean Heritage",model:"Superocean Heritage B01 Chronograph 44",ref:"AB0162161C1S1",price:8211,priceOriginal:9660,url:"https://www.breitling.com/mt-en/watches/superocean-heritage/superocean-heritage-b01-chronograph-44/AB0162161C1S1/?srsltid=AfmBOorQ_JvLN-p1z_BEUtT6gYzjQaxzCQ4NHZLQuVhipuO_mIvdqvN5",k:"PS_AB0162161C1S1"},
+  {brand:'Breitling',collection:"Superocean Heritage",model:"Superocean Heritage B01 Chronograph 44",ref:"AB0162121B1S1",price:8253.5,priceOriginal:9710,url:"https://www.breitling.com/mx-es/watches/superocean-heritage/superocean-heritage-b01-chronograph-44/AB0162121B1S1/?srsltid=AfmBOorjITnda4mnPrsEX9CKaPDmCVA4K4iNoHUEkbUP8DnEFEe_C5VM",k:"PS_AB0162121B1S1"},
+  {brand:'Breitling',collection:"Premier",model:"Premier B01 Chronograph 42",ref:"AB0118A61C1P2",price:8525.5,priceOriginal:10030,url:"https://www.breitling.com/gt-es/watches/premier/premier-b01-chronograph-42/AB0118221C1P2/?srsltid=AfmBOoqRus6tF5FmA3mvdies2purb-tYwAa11RowrF2nog3dv7skOr-L",k:"PS_AB0118A61C1P2"},
+  {brand:'Breitling',collection:"Navitimer",model:"Navitimer B01 Chronograph 43 Swissair",ref:"AB01211B1B1X1",price:8746.5,priceOriginal:10290,url:"https://www.breitling.com/us-en/watches/navitimer/navitimer-b01-chronograph-43/AB01211B1B1X1/?srsltid=AfmBOopPmfCudxhJVEP1CD0HbttsCbB7m65asvDW6Lm0TZKU7CHAR2x_",k:"PS_AB01211B1B1X1"},
 ];
 
 // ── BG SLIDESHOW ──────────────────────────────────────────────────────────────
@@ -2528,7 +2533,9 @@ function renderPS() {
   const psGrid = document.getElementById('psGrid');
   if(!psGrid) return;
   psGrid.innerHTML = psWatches.map(w => {
-    const safeUrl = w.url.replace(/&/g,'&amp;').replace(/"/g,'&quot;');
+    const onSale = w.priceOriginal && w.priceOriginal > w.price;
+    const waText = encodeURIComponent('Hola, me interesa el '+w.brand+' '+w.model+' (REF# '+w.ref+') de Private Selection');
+    const waUrl = 'https://wa.me/525518519137?text='+waText;
     return '<article class="pscard">'
       +'<div class="ps-img">'
         +'<span class="ps-badge">Nuevo · Garantía</span>'
@@ -2539,9 +2546,12 @@ function renderPS() {
         +'<div class="ps-model">'+w.model+'</div>'
         +'<div class="ps-ref">REF# '+w.ref+'</div>'
         +'<div class="ps-foot">'
-          +'<div><div class="ps-cur">USD</div><div class="ps-price">'+fmt(w.price)+'</div></div>'
+          +'<div><div class="ps-cur">USD</div><div class="ps-price-row">'
+            +(onSale ? '<span class="ps-price-original">'+fmt(Math.round(w.priceOriginal))+'</span>' : '')
+            +'<span class="'+(onSale?'ps-price-sale':'ps-price')+'">'+fmt(Math.round(w.price))+'</span>'
+          +'</div></div>'
         +'</div>'
-        +'<a class="ps-link" href="'+safeUrl+'" target="_blank" rel="noopener">Ver ficha oficial</a>'
+        +'<a class="ps-link" href="'+waUrl+'" target="_blank" rel="noopener">Contactar por más info</a>'
       +'</div>'
     +'</article>';
   }).join('');
